@@ -16,7 +16,7 @@ DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 GEMINI_BOT_TOKEN  = os.getenv("GEMINI_BOT_TOKEN")
 
 # 🌐 Globals
-PUBLIC_URL = "https://your-app-name.onrender.com"  # ← set this manually after deploying!
+PUBLIC_URL = "https://zyrobot-1.onrender.com"  # ← set this manually after deploying!
 last_request_ch = None
 
 # 🛡️ Gemini
